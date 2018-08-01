@@ -43,7 +43,8 @@ const Tchat = ({
           <button onClick={disconnect} className="button is-narrow" type="button"><Close /></button>
         </div>
         <div className="tools">
-          <Picker onSelect={addEmoji} native="true" />
+          {/* Emoji Mart */}
+          <Picker onSelect={addEmoji} set="emojione" />
           <div className="box">
             <p>Text color</p>
             <CirclePicker onChange={changeTextColor} />

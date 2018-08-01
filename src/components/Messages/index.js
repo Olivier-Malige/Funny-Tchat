@@ -7,6 +7,8 @@ import PropTypes from 'prop-types';
 /**
  * Local import
  */
+import Message from './Message';
+
 import './messages.sass';
 
 /**
@@ -17,32 +19,30 @@ class Messages extends React.Component {
     messages: PropTypes.arrayOf(PropTypes.object).isRequired,
   };
 
+  // componentDidUpdate() {
+  //   this.messagesEnd.scrollIntoView({ behavior: 'smooth' });
+  // }
   componentDidUpdate() {
-    this.messagesEnd.scrollIntoView({ behavior: 'smooth' });
+    this.scroll();
+  }
+
+  saveRef = (domElement) => {
+    this.node = domElement;
+  }
+
+  scroll = () => {
+    this.node.scrollTo(0, this.node.scrollHeight);
   }
 
   render() {
     const { messages } = this.props;
-
     return (
-      <div className="messages">
+      <div className="messages" ref={this.saveRef}>
         {messages.map(message => (
-          <div key={message.id} className="box column is-narrow animated fadeIn">
-            <div>
-              <strong>{message.user}</strong> <small>{message.time} </small>
-            </div>
-            <p
-              style={{
-                color: message.color,
-              }}
-              ref={(el) => {
-                // for auto scrolling
-                this.messagesEnd = el;
-              }}
-            >
-              {message.text}
-            </p>
-          </div>
+          <Message
+            key={message.id}
+            {...message}
+          />
         ))}
       </div>
     );

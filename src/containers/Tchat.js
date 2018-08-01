@@ -31,7 +31,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(changeTextColor(color.hex));
   },
   addEmoji: (emoji) => {
-    dispatch(addEmojiToInput(emoji.native));
+    dispatch(addEmojiToInput(emoji.colons));
   },
 });
 

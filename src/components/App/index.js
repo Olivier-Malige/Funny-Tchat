@@ -21,6 +21,8 @@ class App extends React.Component {
   };
 
   componentWillMount() {
+    // TODO show messages if no server
+    // Connection to socket.io
     const { connectServer } = this.props;
     connectServer();
   }
