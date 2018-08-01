@@ -18,11 +18,12 @@ import {
  */
 // Actions
 import { receiveMessage, addMessage } from 'src/store/actions';
-
+import config from 'src/config';
 /**
  * Code
  */
-const socketIO = io('http://localhost:3000');
+
+const socketIO = io(config.server);
 
 const socket = store => next => (action) => {
   const state = store.getState();

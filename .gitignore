@@ -3,6 +3,9 @@ dist/
 .vs/
 .vs-code/
 
+src/config.js
+
+
 .DS_Store
 Thumbs.db
 
