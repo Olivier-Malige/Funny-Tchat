@@ -19,9 +19,10 @@ class Messages extends React.Component {
     messages: PropTypes.arrayOf(PropTypes.object).isRequired,
   };
 
-  // componentDidUpdate() {
-  //   this.messagesEnd.scrollIntoView({ behavior: 'smooth' });
-  // }
+  componentDidMount() {
+    this.scroll();
+  }
+
   componentDidUpdate() {
     this.scroll();
   }
