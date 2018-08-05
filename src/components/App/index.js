@@ -17,7 +17,7 @@ import './app.sass';
 class App extends React.Component {
   static propTypes = {
     connectServer: PropTypes.func.isRequired,
-    connectedUser: PropTypes.string.isRequired,
+    user: PropTypes.string.isRequired,
   };
 
   componentWillMount() {
@@ -29,14 +29,14 @@ class App extends React.Component {
 
   render() {
     const {
-      connectedUser,
+      user,
     } = this.props;
     return (
       <div id="app" className="container is-fluid">
-        {connectedUser === '' && (
+        {user === '' && (
           <Login />
         )}
-        {connectedUser && (
+        {user && (
           <Tchat />
         )}
       </div>

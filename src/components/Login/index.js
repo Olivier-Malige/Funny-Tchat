@@ -7,7 +7,7 @@ import React from 'react';
  * Local import
  */
 // Composants
-import ConnectForm from 'src/containers/ConnectForm';
+import InputLogin from 'src/containers/InputLogin';
 // Styles et assets
 import './login.sass';
 
@@ -20,7 +20,7 @@ const Login = () => (
       <h1 id="login-title" className="animated slower infinite pulse slow"><span>F</span>unny Tchat</h1>
       <h2 id="login-subtitle" className="animated slower lightSpeedIn ">Talking about what you want quickly and freely</h2>
     </div>
-    <ConnectForm />
+    <InputLogin />
   </div>
 );
 

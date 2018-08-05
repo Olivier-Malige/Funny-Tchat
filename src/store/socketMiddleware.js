@@ -17,8 +17,18 @@ import {
  * Local import
  */
 // Actions
-import { receiveMessage, addMessage } from 'src/store/actions';
 import config from 'src/config';
+import { addMessage } from 'src/store/reducers/tchat';
+
+export const receiveMessage = () => ({
+  type: RECEIVE_MESSAGE,
+});
+
+export const connectWebSocket = () => ({
+  type: CONNECT_WEBSOCKET,
+});
+
+
 /**
  * Code
  */

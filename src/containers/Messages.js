@@ -6,13 +6,12 @@ import { connect } from 'react-redux';
 /**
  * Local import
  */
-import Messages from 'src/components/Messages';
-import { receiveMessage } from '../store/actions';
-
+import Messages from 'src/components/Tchat/Messages';
+import { receiveMessage } from 'src/store/socketMiddleware';
 
 // Action Creators
 const mapStateToProps = state => ({
-  messages: state.messages,
+  messages: state.tchat.messages,
 });
 
 // Actions

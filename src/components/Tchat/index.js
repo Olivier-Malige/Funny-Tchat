@@ -11,7 +11,7 @@ import { Picker } from 'emoji-mart';
  */
 // Composants
 import Messages from 'src/containers/Messages';
-import InputForm from 'src/containers/InputForm';
+import InputTchat from 'src/containers/InputTchat';
 import Close from 'react-icons/lib/fa/close';
 // Styles et assets
 import './tchat.sass';
@@ -24,7 +24,7 @@ const Tchat = ({
   disconnect,
   addEmoji,
   changeTextColor,
-  connectedUser,
+  user,
 }) => (
   <div id="tchat">
     <header className="hero has-text-centered">
@@ -33,12 +33,12 @@ const Tchat = ({
     <main id="tchat" className="columns">
       <div className="animated bounceInLeft column is-three-quarters">
         <Messages />
-        <InputForm />
+        <InputTchat />
       </div>
       <aside className="animated bounceInRight column is-narrow">
         <div className="title box">
           <div className="user-name">
-            {connectedUser}
+            {user}
           </div>
           <button onClick={disconnect} className="button is-narrow" type="button"><Close /></button>
         </div>
@@ -59,7 +59,7 @@ Tchat.propTypes = {
   disconnect: PropTypes.func.isRequired,
   addEmoji: PropTypes.func.isRequired,
   changeTextColor: PropTypes.func.isRequired,
-  connectedUser: PropTypes.string.isRequired,
+  user: PropTypes.string.isRequired,
 };
 /**
  * Export
