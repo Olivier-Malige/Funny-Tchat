@@ -20,10 +20,16 @@ class InputTchat extends React.Component {
     color: PropTypes.string.isRequired,
   };
 
+  constructor(props) {
+    super(props);
+    this.refTextArea = React.createRef();
+    this.refForm = React.createRef();
+  }
+
   handleSubmit = (evt) => {
-    const inputValue = evt.target.querySelector('input').value;
-    const { onSubmit, user, color } = this.props;
     evt.preventDefault();
+    const inputValue = evt.target.querySelector('textarea').value;
+    const { onSubmit, user, color } = this.props;
     if (inputValue !== '') {
       onSubmit(user, inputValue, color);
     }
@@ -35,16 +41,28 @@ class InputTchat extends React.Component {
     onChange(value);
   }
 
+  handleKeyDown = (evt) => {
+    const area = this.refTextArea.current;
+    const form = this.refForm.current;
+    const { onSubmit, user, color } = this.props;
+    if (evt.which === 13 && !evt.shiftKey && area.value !== '') {
+      evt.preventDefault();
+      onSubmit(user, area.value, color);
+    }
+  }
+
   render() {
     const { value } = this.props;
     return (
-      <form autoComplete="off" className="message-form columns" onSubmit={this.handleSubmit}>
-        <input
+      <form autoComplete="off" className="message-form columns" onSubmit={this.handleSubmit} ref={this.refForm}>
+        <textarea
+          ref={this.refTextArea}
           type="text"
           className="input is-large"
           placeholder="What do you want to say ?"
           onChange={this.handleChange}
           value={value}
+          onKeyDown={this.handleKeyDown}
         />
         <button type="submit" className="button is-large">
           Say
