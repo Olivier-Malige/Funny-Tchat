@@ -32,6 +32,7 @@ export default (state = initialState, action = {}) => {
       return {
         ...state,
         user: action.user,
+        input: '',
       };
     case LOGOUT_USER:
       return {

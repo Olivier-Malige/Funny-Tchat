@@ -7,6 +7,7 @@
 // Form
 import {
   SEND_MESSAGE,
+  CLEAR_INPUT,
   ADD_MESSAGE,
   CHANGE_TCHAT_INPUT,
   CONNECT_WEBSOCKET,
@@ -61,6 +62,12 @@ export default (state = initialState, action = {}) => {
         textColor: action.value,
       };
 
+    case CLEAR_INPUT:
+      return {
+        ...state,
+        input: '',
+      };
+
     case ADD_EMOJI:
       return {
         ...state,
@@ -90,6 +97,9 @@ export const changeTchatInput = ({ value }) => ({
   value,
 });
 
+export const clearTchatInput = () => ({
+  type: CLEAR_INPUT,
+});
 
 export const changeTextColor = value => ({
   type: TEXT_COLOR,

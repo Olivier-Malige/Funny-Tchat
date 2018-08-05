@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import Tchat from 'src/components/Tchat';
 import { connectWebSocket } from 'src/store/socketMiddleware';
 import { logoutUser } from 'src/store/reducers/login';
-import { changeTextColor, addEmojiToInput } from 'src/store/reducers/tchat';
+import { changeTextColor, addEmojiToInput, clearTchatInput } from 'src/store/reducers/tchat';
 
 // Action Creators
 const mapStateToProps = state => ({
@@ -23,6 +23,7 @@ const mapDispatchToProps = dispatch => ({
   },
   disconnect: () => {
     dispatch(logoutUser());
+    dispatch(clearTchatInput());
   },
   changeTextColor: (color) => {
     dispatch(changeTextColor(color.hex));

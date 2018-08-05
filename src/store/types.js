@@ -12,3 +12,4 @@ export const CONNECT_USER = 'CONNECT_USER';
 export const LOGOUT_USER = 'LOGOUT_USER';
 export const TEXT_COLOR = 'TEXT_COLOR';
 export const ADD_EMOJI = 'ADD_EMOJI';
+export const CLEAR_INPUT = 'CLEAR_INPUT';
