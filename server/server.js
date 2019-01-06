@@ -2,8 +2,10 @@
  * Require
  */
 const express = require('express');
-const Server = require('http').Server;
 const socket = require('socket.io');
+const http = require ('http');
+const https = require ('https');
+const fs = require('fs');
 // config Json
 const config = require('./config');
 
@@ -11,9 +13,20 @@ const config = require('./config');
  * Vars
  */
 const app = express();
-const server = Server(app);
-const io = socket(server);
-
+/*
+ * Server
+ */
+let server;
+if (config.enableHttps) {
+  server = https.createServer({
+    key: fs.readFileSync(config.https.privkey),
+    cert: fs.readFileSync(config.https.cert),
+  }, app)
+    .listen(config.port);
+}
+else {
+    server = http.createServer(app).listen(config.port);
+  }
 
 /*
  * Express
@@ -29,6 +42,7 @@ app.use(function(req, res, next) {
 /*
  * Socket.io
  */
+const io = socket(server);
 let id = 0;
 let numUsers = 0;
 io.on('connection', function(socket) {
@@ -45,16 +59,3 @@ io.on('connection', function(socket) {
     });
 });
 
-/*
- * Server
- */
-if (config.http.enable) {
-  http.createServer(app).listen(config.http.port);
-}
-
-if (config.https.enable) {
-  https.createServer({
-    key: fs.readFileSync(config.https.privkey),
-    cert: fs.readFileSync(config.https.cert),
-  }, app).listen(config.https.port);
-}
