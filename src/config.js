@@ -1,5 +1,6 @@
 export default {
+  // local server
   // server: 'http://localhost:3000',
-  // production server here
-  server: 'http://olivier-malige.pw:3009',
+  // production server
+  server: 'https://olivier-malige.pw:3009',
 };

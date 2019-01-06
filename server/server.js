@@ -1,18 +1,18 @@
 /*
  * Require
  */
-var express = require('express');
-var join = require('path').join;
-var Server = require('http').Server;
-var socket = require('socket.io');
-
+const express = require('express');
+const Server = require('http').Server;
+const socket = require('socket.io');
+// config Json
+const config = require('./config');
 
 /*
  * Vars
  */
-var app = express();
-var server = Server(app);
-var io = socket(server);
+const app = express();
+const server = Server(app);
+const io = socket(server);
 
 
 /*
@@ -48,6 +48,13 @@ io.on('connection', function(socket) {
 /*
  * Server
  */
-server.listen(3009, function() {
-  console.log('listening on *:3009');
-});
+if (config.http.enable) {
+  http.createServer(app).listen(config.http.port);
+}
+
+if (config.https.enable) {
+  https.createServer({
+    key: fs.readFileSync(config.https.privkey),
+    cert: fs.readFileSync(config.https.cert),
+  }, app).listen(config.https.port);
+}

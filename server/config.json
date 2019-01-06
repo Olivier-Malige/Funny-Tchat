@@ -1,0 +1,12 @@
+{
+  "http": {
+    "enable": true,
+    "port": 3000
+  },
+  "https": {
+    "enable": false,
+    "port": 3009,
+    "privkey": "",
+    "cert": ""
+  }
+}
