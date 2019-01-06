@@ -48,6 +48,6 @@ io.on('connection', function(socket) {
 /*
  * Server
  */
-server.listen(3000, function() {
-  console.log('listening on *:3000');
+server.listen(3009, function() {
+  console.log('listening on *:3009');
 });

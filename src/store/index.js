@@ -16,8 +16,8 @@ import socket from './socketMiddleware';
  */
 // devTools
 const devTools = [];
-if (window.devToolsExtension) {
-  devTools.push(window.devToolsExtension());
+if (window.__REDUX_DEVTOOLS_EXTENSION__) {
+  devTools.push(window.__REDUX_DEVTOOLS_EXTENSION__());
 }
 
 // applyMiddleware applique le middleware dans le parcours de l'action
