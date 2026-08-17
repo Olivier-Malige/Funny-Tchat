@@ -6,7 +6,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3000
-      CORS_ORIGIN: ${CORS_ORIGIN:-*}
+      CORS_ORIGIN: ${CORS_ORIGIN:?Set CORS_ORIGIN in .env to https://your-domain}
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

@@ -41,6 +41,8 @@ class InputLogin extends React.Component {
           className="input is-4 is-large column"
           onChange={this.handleChange}
           value={value}
+          maxLength={32}
+          autoComplete="username"
         />
         <button type="submit" className="button is-large is-narrow">
           Join

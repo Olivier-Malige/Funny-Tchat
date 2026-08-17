@@ -9,6 +9,12 @@ const fs = require('fs');
 const path = require('path');
 // config Json
 const config = require('./config');
+const {
+  sanitizeMessage,
+  allowMessage,
+  connectionGuard,
+  corsOrigin,
+} = require('./security');
 
 /*
  * Vars
@@ -16,10 +22,11 @@ const config = require('./config');
 const app = express();
 app.set('trust proxy', 1);
 const port = Number(process.env.PORT) || config.port || 3000;
-const corsOrigin = process.env.CORS_ORIGIN || '*';
+const allowedOrigin = corsOrigin();
 const enableHttps = Boolean(
   config.enableHttps && config.https && config.https.privkey && config.https.cert,
 );
+const isProd = process.env.NODE_ENV === 'production';
 
 /*
  * Server
@@ -36,17 +43,21 @@ if (enableHttps) {
 
 const io = new Server(server, {
   cors: {
-    origin: corsOrigin,
+    origin: allowedOrigin || false,
     methods: ['GET', 'POST'],
   },
+  maxHttpBufferSize: 8192,
 });
+io.use(connectionGuard());
 
 /*
  * Express
  */
 app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', corsOrigin);
-  res.header('Access-Control-Allow-Credentials', corsOrigin !== '*');
+  if (allowedOrigin) {
+    res.header('Access-Control-Allow-Origin', allowedOrigin);
+    res.header('Access-Control-Allow-Credentials', allowedOrigin !== '*');
+  }
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
   next();
@@ -73,14 +84,24 @@ if (distDir) {
  */
 let id = 0;
 io.on('connection', function(socket) {
-  console.log('>> socket.io -An user is connected');
+  if (!isProd) {
+    console.log('>> socket.io -An user is connected');
+  }
   socket.on('send_message', function(message) {
-    message.id = ++id;
-    io.emit('send_message', message);
-    console.log(message);
+    if (!allowMessage(socket)) {
+      return;
+    }
+    const safe = sanitizeMessage(message);
+    if (!safe) {
+      return;
+    }
+    safe.id = ++id;
+    io.emit('send_message', safe);
   });
   socket.on('disconnect', () => {
-    console.log('>> socket.io -An user was disconnected');
+    if (!isProd) {
+      console.log('>> socket.io -An user was disconnected');
+    }
   });
 });
 

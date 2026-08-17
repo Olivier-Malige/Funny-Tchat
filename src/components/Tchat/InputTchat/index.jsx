@@ -62,6 +62,7 @@ class InputTchat extends React.Component {
           placeholder="What do you want to say ?"
           onChange={this.handleChange}
           value={value}
+          maxLength={2000}
           onKeyDown={this.handleKeyDown}
         />
         <button type="submit" className="button is-large">

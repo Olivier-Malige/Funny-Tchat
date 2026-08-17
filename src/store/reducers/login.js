@@ -26,12 +26,12 @@ export default (state = initialState, action = {}) => {
     case CHANGE_LOGIN_INPUT:
       return {
         ...state,
-        input: action.value,
+        input: String(action.value || '').slice(0, 32),
       };
     case CONNECT_USER:
       return {
         ...state,
-        user: action.user,
+        user: String(action.user || '').trim().slice(0, 32),
         input: '',
       };
     case LOGOUT_USER:

@@ -14,6 +14,11 @@ import {
   ADD_EMOJI,
 } from 'src/store/types';
 
+const HISTORY_MAX = 200;
+const USERNAME_MAX = 32;
+const MESSAGE_MAX = 2000;
+const HEX_COLOR = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+
 const initialState = {
   messages: [],
   input: '',
@@ -30,21 +35,26 @@ export default (state = initialState, action = {}) => {
     case ADD_MESSAGE: {
       id += 1;
       const date = new Date();
+      const user = String(action.value.user || '').trim().slice(0, USERNAME_MAX);
+      const text = String(action.value.text || '').trim().slice(0, MESSAGE_MAX);
+      if (!user || !text) {
+        return state;
+      }
       return {
         ...state,
         messages: [...state.messages, {
-          user: action.value.user,
-          text: action.value.text,
-          color: action.value.color || state.textColor,
+          user,
+          text,
+          color: HEX_COLOR.test(action.value.color) ? action.value.color : '#000',
           time: `${date.getHours()}h ${date.getMinutes()}m ${date.getSeconds()}s`,
           id: action.value.id || id,
-        }],
+        }].slice(-HISTORY_MAX),
       };
     }
     case CHANGE_TCHAT_INPUT:
       return {
         ...state,
-        input: action.value,
+        input: String(action.value || '').slice(0, MESSAGE_MAX),
       };
 
     case SEND_MESSAGE: {
@@ -57,7 +67,7 @@ export default (state = initialState, action = {}) => {
     case TEXT_COLOR:
       return {
         ...state,
-        textColor: action.value,
+        textColor: HEX_COLOR.test(action.value) ? action.value : state.textColor,
       };
 
     case CLEAR_INPUT:
@@ -69,7 +79,7 @@ export default (state = initialState, action = {}) => {
     case ADD_EMOJI:
       return {
         ...state,
-        input: state.input + action.value,
+        input: (state.input + action.value).slice(0, MESSAGE_MAX),
       };
 
     default:

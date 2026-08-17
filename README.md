@@ -64,6 +64,8 @@ docker compose -f docker-compose.prod.yml --env-file .env up -d --build
 
 The app is then available at `https://tchat.example.com`. Certificates are issued automatically.
 
+Do not set `CORS_ORIGIN=*`. Messages are size-limited and rate-limited on the server.
+
 Useful commands:
 
 ```bash
