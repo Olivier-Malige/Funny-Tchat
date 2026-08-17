@@ -1,6 +1,6 @@
 {
-  "enableHttps": true,
-  "port": 3009,
+  "enableHttps": false,
+  "port": 3000,
   "https": {
     "privkey": "",
     "cert": ""

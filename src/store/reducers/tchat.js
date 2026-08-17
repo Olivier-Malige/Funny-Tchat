@@ -10,8 +10,6 @@ import {
   CLEAR_INPUT,
   ADD_MESSAGE,
   CHANGE_TCHAT_INPUT,
-  CONNECT_WEBSOCKET,
-  RECEIVE_MESSAGE,
   TEXT_COLOR,
   ADD_EMOJI,
 } from 'src/store/types';
@@ -37,9 +35,9 @@ export default (state = initialState, action = {}) => {
         messages: [...state.messages, {
           user: action.value.user,
           text: action.value.text,
-          color: state.textColor,
+          color: action.value.color || state.textColor,
           time: `${date.getHours()}h ${date.getMinutes()}m ${date.getSeconds()}s`,
-          id,
+          id: action.value.id || id,
         }],
       };
     }
@@ -87,7 +85,7 @@ export const sendMessage = value => ({
   value,
 });
 
-export const addMessage = ({ value }) => ({
+export const addMessage = (value) => ({
   type: ADD_MESSAGE,
   value,
 });

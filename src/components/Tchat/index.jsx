@@ -4,23 +4,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { CirclePicker } from 'react-color';
-import 'emoji-mart/css/emoji-mart.css';
-import { Picker } from 'emoji-mart';
 /**
  * Local import
  */
 // Composants
 import Messages from 'src/containers/Messages';
 import InputTchat from 'src/containers/InputTchat';
-import Close from 'react-icons/lib/fa/close';
+import { FaTimes } from 'react-icons/fa';
 // Styles et assets
 import './tchat.sass';
+
+const EmojiPicker = React.lazy(() => import('./EmojiPicker'));
 
 /**
  * Code
  */
 const Tchat = ({
-  connect,
   disconnect,
   addEmoji,
   changeTextColor,
@@ -28,23 +27,27 @@ const Tchat = ({
 }) => (
   <div id="tchat">
     <header className="hero has-text-centered">
-      <h1 className="title animated bounceIn ">Funny Tchat</h1>
+      <h1 className="title animate__animated animate__bounceIn">Funny Tchat</h1>
     </header>
-    <main id="tchat" className="columns">
-      <div className="animated bounceInLeft column is-three-quarters">
+    <main className="columns tchat-layout">
+      <div className="animate__animated animate__bounceInLeft column is-three-quarters">
         <Messages />
         <InputTchat />
       </div>
-      <aside className="animated bounceInRight column is-narrow">
+      <aside className="animate__animated animate__bounceInRight column is-narrow">
         <div className="title box">
           <div className="user-name">
             {user}
           </div>
-          <button onClick={disconnect} className="button is-narrow" type="button"><Close /></button>
+          <button onClick={disconnect} className="button is-narrow" type="button" aria-label="Logout">
+            <FaTimes />
+          </button>
         </div>
         <div className="tools">
           {/* Emoji Mart */}
-          <Picker onSelect={addEmoji} set="emojione" />
+          <React.Suspense fallback={null}>
+            <EmojiPicker onSelect={addEmoji} />
+          </React.Suspense>
           <div className="box">
             <p>Text color</p>
             <CirclePicker onChange={changeTextColor} />
@@ -55,7 +58,6 @@ const Tchat = ({
   </div>
 );
 Tchat.propTypes = {
-  connect: PropTypes.func.isRequired,
   disconnect: PropTypes.func.isRequired,
   addEmoji: PropTypes.func.isRequired,
   changeTextColor: PropTypes.func.isRequired,

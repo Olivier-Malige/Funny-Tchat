@@ -1,10 +1,11 @@
 node_modules/
 dist/
+.env
 .vs/
 .vs-code/
-
 
 .DS_Store
 Thumbs.db
 
 yarn-error.log
+npm-debug.log*

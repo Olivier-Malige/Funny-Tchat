@@ -1,7 +1,7 @@
 /**
  * npm import
  */
-import io from 'socket.io-client';
+import { io } from 'socket.io-client';
 
 /**
  * Types import
@@ -10,7 +10,6 @@ import {
   SEND_MESSAGE,
   CONNECT_USER,
   CONNECT_WEBSOCKET,
-  RECEIVE_MESSAGE,
 } from 'src/store/types';
 
 /**
@@ -19,10 +18,6 @@ import {
 // Actions
 import config from 'src/config';
 import { addMessage } from 'src/store/reducers/tchat';
-
-export const receiveMessage = () => ({
-  type: RECEIVE_MESSAGE,
-});
 
 export const connectWebSocket = () => ({
   type: CONNECT_WEBSOCKET,
@@ -33,37 +28,41 @@ export const connectWebSocket = () => ({
  * Code
  */
 
-const socketIO = io(config.server);
+const socketIO = config.server ? io(config.server) : io();
 
-const socket = store => next => (action) => {
-  const state = store.getState();
-  switch (action.type) {
-    case CONNECT_WEBSOCKET:
-      store.dispatch(receiveMessage());
-      break;
-    case RECEIVE_MESSAGE:
-      socketIO.on('user_left', (data) => {
-        console.log(data.userNumbers);
-      });
-      socketIO.on('send_message', (data) => {
-        store.dispatch(addMessage({
-          user: data.username,
-          value: data.message,
-        }));
-      });
-      break;
-    case SEND_MESSAGE:
-      socketIO.emit('send_message', {
-        username: state.connectedUser,
-        message: action.value,
-      });
-      break;
-    case CONNECT_USER:
-      socketIO.emit('change_username', { username: action.user });
-      break;
-    default:
+let storeRef;
+
+socketIO.on('send_message', (data) => {
+  if (!storeRef) {
+    return;
   }
-  next(action);
+  storeRef.dispatch(addMessage({
+    user: data.username,
+    text: data.message,
+    color: data.color,
+    id: data.id,
+  }));
+});
+
+const socket = (store) => {
+  storeRef = store;
+  return (next) => (action) => {
+    const state = store.getState();
+    switch (action.type) {
+      case SEND_MESSAGE:
+        socketIO.emit('send_message', {
+          username: state.login.user,
+          message: action.value.text,
+          color: state.tchat.textColor,
+        });
+        break;
+      case CONNECT_USER:
+        socketIO.emit('change_username', { username: action.user });
+        break;
+      default:
+    }
+    return next(action);
+  };
 };
 
 /**

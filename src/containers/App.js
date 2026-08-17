@@ -8,8 +8,6 @@ import { connect } from 'react-redux';
  */
 import App from 'src/components/App';
 import { connectWebSocket } from 'src/store/socketMiddleware';
-import { logoutUser } from 'src/store/reducers/login';
-import { changeTextColor, addEmojiToInput } from 'src/store/reducers/tchat';
 
 // Action Creators
 const mapStateToProps = state => ({

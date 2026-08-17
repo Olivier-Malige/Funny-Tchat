@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
  * Local import
  */
 import Tchat from 'src/components/Tchat';
-import { connectWebSocket } from 'src/store/socketMiddleware';
 import { logoutUser } from 'src/store/reducers/login';
 import { changeTextColor, addEmojiToInput, clearTchatInput } from 'src/store/reducers/tchat';
 
@@ -18,9 +17,6 @@ const mapStateToProps = state => ({
 
 // Actions
 const mapDispatchToProps = dispatch => ({
-  connect: () => {
-    dispatch(connectWebSocket());
-  },
   disconnect: () => {
     dispatch(logoutUser());
     dispatch(clearTchatInput());
@@ -29,7 +25,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(changeTextColor(color.hex));
   },
   addEmoji: (emoji) => {
-    dispatch(addEmojiToInput(emoji.colons));
+    dispatch(addEmojiToInput(emoji.native));
   },
 });
 

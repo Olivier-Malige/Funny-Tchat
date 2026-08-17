@@ -20,7 +20,7 @@ class App extends React.Component {
     user: PropTypes.string.isRequired,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     // TODO show messages if no server
     // Connection to socket.io
     const { connectServer } = this.props;

@@ -1,0 +1,9 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3009:3000"
+    environment:
+      PORT: 3000
+      CORS_ORIGIN: "*"
+    restart: unless-stopped

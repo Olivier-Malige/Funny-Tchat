@@ -3,7 +3,6 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Formatizer } from 'formatizer';
 /**
  * Local import
  */
@@ -17,14 +16,12 @@ const Message = ({
   color,
   time,
 }) => (
-  <div className="box column is-narrow animated fadeIn">
+  <div className="box column is-narrow animate__animated animate__fadeIn">
     <div>
       <strong>{user}</strong> <small>{time} </small>
     </div>
     <div style={{ color }}>
-      <Formatizer>
-        {text}
-      </Formatizer>
+      {text}
     </div>
   </div>
 );

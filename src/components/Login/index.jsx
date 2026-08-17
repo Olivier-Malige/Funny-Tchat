@@ -17,8 +17,8 @@ import './login.sass';
 const Login = () => (
   <div id="login">
     <div>
-      <h1 id="login-title" className="animated slower infinite pulse slow"><span>F</span>unny Tchat</h1>
-      <h2 id="login-subtitle" className="animated slower lightSpeedIn ">Talking about what you want quickly and freely</h2>
+      <h1 id="login-title" className="animate__animated animate__slower animate__infinite animate__pulse"><span>F</span>unny Tchat</h1>
+      <h2 id="login-subtitle" className="animate__animated animate__lightSpeedIn">Talking about what you want quickly and freely</h2>
     </div>
     <InputLogin />
   </div>

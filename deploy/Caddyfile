@@ -1,0 +1,18 @@
+{
+	email {$ACME_EMAIL}
+}
+
+{$DOMAIN} {
+	encode gzip
+
+	reverse_proxy app:3000 {
+		header_up X-Forwarded-Proto {scheme}
+		header_up X-Forwarded-For {remote_ip}
+	}
+
+	header {
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		-Server
+	}
+}

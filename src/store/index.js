@@ -1,7 +1,7 @@
 /**
  * Npm import
  */
-import { createStore, applyMiddleware, compose } from 'redux';
+import { legacy_createStore as createStore, applyMiddleware, compose } from 'redux';
 
 /**
  * Local import
@@ -14,20 +14,13 @@ import socket from './socketMiddleware';
 /**
  * code
  */
-// devTools
-const devTools = [];
-if (window.__REDUX_DEVTOOLS_EXTENSION__) {
-  devTools.push(window.__REDUX_DEVTOOLS_EXTENSION__());
-}
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 // applyMiddleware applique le middleware dans le parcours de l'action
 const appliedMiddleware = applyMiddleware(socket);
 
-// J'assemble les middlewares et les outils de dev
-const enhancers = compose(appliedMiddleware, ...devTools);
-
 // Je transmets à mon store les middlewares / enhancers
-const store = createStore(reducer, enhancers);
+const store = createStore(reducer, composeEnhancers(appliedMiddleware));
 
 /**
  * Export
