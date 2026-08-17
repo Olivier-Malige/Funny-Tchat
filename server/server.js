@@ -10,6 +10,7 @@ const path = require('path');
 // config Json
 const config = require('./config');
 const {
+  sanitizeUsername,
   sanitizeMessage,
   allowMessage,
   connectionGuard,
@@ -26,8 +27,6 @@ const allowedOrigin = corsOrigin();
 const enableHttps = Boolean(
   config.enableHttps && config.https && config.https.privkey && config.https.cert,
 );
-const isProd = process.env.NODE_ENV === 'production';
-
 /*
  * Server
  */
@@ -83,10 +82,42 @@ if (distDir) {
  * Socket.io
  */
 let id = 0;
-io.on('connection', function(socket) {
-  if (!isProd) {
-    console.log('>> socket.io -An user is connected');
+let online = 0;
+let totalConnections = 0;
+let totalMessages = 0;
+
+const logDir = process.env.LOG_DIR || path.join(__dirname, '..', 'logs');
+let logFile = null;
+try {
+  fs.mkdirSync(logDir, { recursive: true });
+  logFile = fs.createWriteStream(path.join(logDir, 'server.log'), { flags: 'a' });
+  logFile.on('error', function(err) {
+    console.error('log file error', err.message);
+  });
+} catch (err) {
+  console.error('cannot open log file', err.message);
+}
+
+function log(event, details) {
+  const line = `${new Date().toISOString()} ${event} ${details}`;
+  console.log(line);
+  if (logFile) {
+    logFile.write(`${line}\n`);
   }
+}
+
+io.on('connection', function(socket) {
+  online += 1;
+  totalConnections += 1;
+  log('connect', `online=${online} total=${totalConnections}`);
+  socket.on('change_username', function(data) {
+    const username = sanitizeUsername(data && data.username);
+    if (!username) {
+      return;
+    }
+    socket.username = username;
+    log('join', `user=${JSON.stringify(username)} online=${online}`);
+  });
   socket.on('send_message', function(message) {
     if (!allowMessage(socket)) {
       return;
@@ -96,12 +127,13 @@ io.on('connection', function(socket) {
       return;
     }
     safe.id = ++id;
+    totalMessages += 1;
     io.emit('send_message', safe);
+    log('message', `user=${JSON.stringify(safe.username)} total=${totalMessages}`);
   });
   socket.on('disconnect', () => {
-    if (!isProd) {
-      console.log('>> socket.io -An user was disconnected');
-    }
+    online -= 1;
+    log('disconnect', `user=${JSON.stringify(socket.username || 'anonymous')} online=${online}`);
   });
 });
 

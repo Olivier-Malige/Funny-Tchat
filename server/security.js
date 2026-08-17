@@ -5,14 +5,20 @@ const RATE_MAX = 15;
 const MAX_CONNECTIONS_PER_IP = 20;
 const HEX_COLOR = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
 
+/** Returns a trimmed nickname, or an empty string. */
+function sanitizeUsername(value) {
+  if (typeof value !== 'string') {
+    return '';
+  }
+  return value.trim().slice(0, USERNAME_MAX);
+}
+
 /** Returns a safe chat payload, or null when the input is invalid. */
 function sanitizeMessage(payload) {
   if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
     return null;
   }
-  const username = typeof payload.username === 'string'
-    ? payload.username.trim().slice(0, USERNAME_MAX)
-    : '';
+  const username = sanitizeUsername(payload.username);
   const message = typeof payload.message === 'string'
     ? payload.message.trim().slice(0, MESSAGE_MAX)
     : '';
@@ -80,6 +86,7 @@ function corsOrigin() {
 }
 
 module.exports = {
+  sanitizeUsername,
   sanitizeMessage,
   allowMessage,
   connectionGuard,
