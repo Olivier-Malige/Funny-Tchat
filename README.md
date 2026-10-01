@@ -36,11 +36,11 @@ Stop with `Ctrl+C`, then `docker compose down`.
 
 ## Production on a VPS
 
-The production stack is `app` (Node + Socket.io) behind **Caddy** (automatic HTTPS via Let's Encrypt). The Node port is not exposed on the public internet.
+The production stack is `app` (Node + Socket.io) behind the VPS **Nginx**. The app is bound to localhost; Nginx handles HTTPS and WebSocket proxying.
 
 ### 1. DNS
 
-Create an **A** record from your hostname (e.g. `tchat.example.com`) to the VPS public IP. Ports **80** and **443** must be open.
+Create an **A** record from `funny-tchat.omalige.dev` to the VPS public IP. Ports **80** and **443** must be open.
 
 ### 2. Env file
 
@@ -48,12 +48,10 @@ Create an **A** record from your hostname (e.g. `tchat.example.com`) to the VPS 
 cp .env.example .env
 ```
 
-Set at least:
+Set the production origin:
 
 ```env
-DOMAIN=tchat.example.com
-CORS_ORIGIN=https://tchat.example.com
-ACME_EMAIL=you@example.com
+CORS_ORIGIN=https://funny-tchat.omalige.dev
 ```
 
 ### 3. Start
@@ -62,7 +60,7 @@ ACME_EMAIL=you@example.com
 docker compose -f docker-compose.prod.yml --env-file .env up -d --build
 ```
 
-The app is then available at `https://tchat.example.com`. Certificates are issued automatically.
+Configure the Nginx virtual host from `deploy/nginx.host.conf.example`, replacing its certificate paths if needed. Issue the certificate with Certbot, enable the site, and reload Nginx. The app is then available at `https://funny-tchat.omalige.dev`.
 
 Do not set `CORS_ORIGIN=*`. Messages are size-limited and rate-limited on the server.
 
@@ -74,21 +72,7 @@ docker compose -f docker-compose.prod.yml ps
 docker compose -f docker-compose.prod.yml down
 ```
 
-### Already using Nginx on the VPS?
-
-Keep Caddy disabled: run only the app, bound to localhost, and proxy with the host Nginx (WebSocket headers included):
-
-```yaml
-# docker-compose.yml
-ports:
-  - "127.0.0.1:3000:3000"
-```
-
-```bash
-docker compose up -d --build
-```
-
-See `deploy/nginx.host.conf.example`.
+The example Nginx config includes the required WebSocket headers. This production Compose file binds the app to `127.0.0.1:3000` so it is not directly exposed to the internet. See `deploy/nginx.host.conf.example`.
 
 ## Local development
 
@@ -118,7 +102,7 @@ src/                     # React + Redux
 server/                  # Express + Socket.io
 Dockerfile               # App image (Vite build + Node)
 docker-compose.yml       # Local Docker
-docker-compose.prod.yml  # VPS: app + Caddy (HTTPS)
+docker-compose.prod.yml  # VPS: app bound to localhost behind Nginx
 deploy/                  # Caddyfile + Nginx example
 ```
 

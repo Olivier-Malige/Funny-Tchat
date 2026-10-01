@@ -86,24 +86,8 @@ let online = 0;
 let totalConnections = 0;
 let totalMessages = 0;
 
-const logDir = process.env.LOG_DIR || path.join(__dirname, '..', 'logs');
-let logFile = null;
-try {
-  fs.mkdirSync(logDir, { recursive: true });
-  logFile = fs.createWriteStream(path.join(logDir, 'server.log'), { flags: 'a' });
-  logFile.on('error', function(err) {
-    console.error('log file error', err.message);
-  });
-} catch (err) {
-  console.error('cannot open log file', err.message);
-}
-
 function log(event, details) {
-  const line = `${new Date().toISOString()} ${event} ${details}`;
-  console.log(line);
-  if (logFile) {
-    logFile.write(`${line}\n`);
-  }
+  console.log(`${new Date().toISOString()} ${event} ${details}`);
 }
 
 io.on('connection', function(socket) {

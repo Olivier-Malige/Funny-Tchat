@@ -19,9 +19,6 @@ RUN npm ci --omit=dev
 COPY server ./server
 COPY --from=build /app/dist ./dist
 
-ENV LOG_DIR=/app/logs
-RUN mkdir -p /app/logs && chown node:node /app/logs
-
 USER node
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s \

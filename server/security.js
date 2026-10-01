@@ -4,6 +4,7 @@ const RATE_WINDOW_MS = 10000;
 const RATE_MAX = 15;
 const MAX_CONNECTIONS_PER_IP = 20;
 const HEX_COLOR = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+const net = require('net');
 
 /** Returns a trimmed nickname, or an empty string. */
 function sanitizeUsername(value) {
@@ -44,9 +45,11 @@ function allowMessage(socket) {
 }
 
 function clientIp(socket) {
-  const forwarded = socket.handshake.headers['x-forwarded-for'];
-  if (typeof forwarded === 'string' && forwarded.trim()) {
-    return forwarded.split(',')[0].trim();
+  // The app is bound to localhost behind Nginx, which overwrites X-Real-IP.
+  // Never trust the client-supplied X-Forwarded-For chain for rate limiting.
+  const forwarded = socket.handshake.headers['x-real-ip'];
+  if (typeof forwarded === 'string' && net.isIP(forwarded.trim())) {
+    return forwarded.trim();
   }
   return socket.handshake.address;
 }
