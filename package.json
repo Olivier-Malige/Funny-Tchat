@@ -30,7 +30,7 @@
     "eslint": "^8.57.1",
     "eslint-plugin-react": "^7.37.5",
     "sass": "^1.85.1",
-    "vite": "^8.2.1"
+    "vite": "^8.3.4"
   },
   "scripts": {
     "dev": "concurrently -n server,client -c blue,green \"npm run dev:server\" \"vite\"",
